@@ -37,7 +37,6 @@ class Caching_Proxy_Handler(http.server.BaseHTTPRequestHandler):
     origin=""
 
     def do_GET(self):
-        print(f"[{self.client_address[0]}] {self.command} {self.path}")
         key=hashlib.sha256(f"{self.command}:{self.path}".encode()).hexdigest()
         
         #Cache Hit
@@ -71,7 +70,7 @@ class Caching_Proxy_Handler(http.server.BaseHTTPRequestHandler):
                 self.send_header("Cache", "Miss")
                 self.send_header("Content-Length", str(len(body)))
                 self.end_headers()
-
+                
                 self.wfile.write(body)
                 
                 Cache[key] = {
