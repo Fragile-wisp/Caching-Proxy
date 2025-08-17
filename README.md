@@ -1,8 +1,6 @@
 # Caching-Proxy
  Created caching proxy cli tool which takes an origin from user and caches stuff from that origin.
- 
- \
- 
+ <br>
 # Main aims:
 -Bare bones app with minimal code for ease of implementation (so practicality may be overlooked in some places)
 
