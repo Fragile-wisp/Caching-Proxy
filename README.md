@@ -3,8 +3,11 @@
 
 # Main aims:
 -Bare bones app with minimal code for ease of implementation (so practicality may be overlooked in some places)
+
 -Want a clear and concise understanding of caching and proxy caching
+
 -Want to learn about cli tools in python via argsparse
+
 -Want to get an understanding of http servers which will be used in http caching for this proxy
 
 # How to run (example):
