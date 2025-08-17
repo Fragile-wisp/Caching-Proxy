@@ -37,35 +37,41 @@ class Caching_Proxy_Handler(http.server.BaseHTTPRequestHandler):
     origin=""
 
     def do_GET(self):
+        print(f"[{self.client_address[0]}] {self.command} {self.path}")
         key=hashlib.sha256(f"{self.command}:{self.path}".encode()).hexdigest()
         
         #Cache Hit
         if key in Cache:
+            print("X-Cache HIT")
             Cached_response=Cache[key]
             self.send_response(Cached_response["status"])
 
             for header, value in Cached_response["headers"].items():
                 self.send_header(header, value)
             self.send_header("X-Cache", "HIT")
+            self.send_header("Content-Length", str(len(Cached_response["body"])))
             self.end_headers()
             self.wfile.write(Cached_response["body"])
-    
+
+        #Cache Miss
         else:
+            print("X-Cache MISS")
             target_url = self.origin.rstrip("/") + self.path
             try:
-                response=requests.get(target_url)
+                response=requests.get(target_url, headers={"Accept-Encoding": "identity"})
+                body=response.content
                 self.send_response(response.status_code)
 
                 header_cache={}
                 for header, value in response.headers.items():
-                    if header.lower() not in ["transfer_encoding", "content-length"]:
+                    if header.lower() not in ["transfer-encoding", "content-length", "connection", "date", "server"]:
                         self.send_header(header, value)
                         header_cache[header] = value
 
                 self.send_header("Cache", "Miss")
+                self.send_header("Content-Length", str(len(body)))
                 self.end_headers()
 
-                body = response.content
                 self.wfile.write(body)
                 
                 Cache[key] = {
