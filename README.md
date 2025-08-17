@@ -25,6 +25,8 @@ http://localhost:3000/products
 
 -->Repeat and see Cache Hits and Misses in terminal
 
+
+
 -->Clear Cache:
 
 python app.py --clear-cache
